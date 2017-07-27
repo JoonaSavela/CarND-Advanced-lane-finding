@@ -1,6 +1,4 @@
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Writeup
 
 ---
 
@@ -70,25 +68,25 @@ The code for my perspective transform includes a function called `warper()`, whi
 
 ```python
 src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
+    [[img_shape[0]-568,img_shape[1]/2+100], # top right
+    [img_shape[0]-100,img_shape[1]], # bottom right
+    [100,img_shape[1]], # bottom left
+    [568,img_shape[1]/2+100]]) # top left
 dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+    [[img_shape[0]/2+300,0], # top right
+    [img_shape[0]/2+300,img_shape[1]], # bottom right
+    [img_shape[0]/2-300,img_shape[1]], # bottom left
+    [img_shape[0]/2-300,0]]) # top left
 ```
 
 This resulted in the following source and destination points:
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| Source        | Destination   | Orientation   |
+|:-------------:|:-------------:|:-------------:|
+| 712, 460      | 940, 0        | top right     |
+| 1180, 720     | 940, 720      | bottom right  |
+| 100, 720      | 340, 720      | bottom left   |
+| 568, 460      | 340, 0        | top left      |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
@@ -116,7 +114,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_videos/output_project_video.mp4).
 
 ---
 
