@@ -17,13 +17,17 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/undistort_output.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image1]: ./output_images/calib_img.jpg "Calibration image"
+[image2]: ./output_images/test_undist_img.jpg "Undistorted calibration image"
+[image3]: ./test_images/test4.jpg "Image"
+[image4]: ./output_images/undist6.jpg "Undistorted image"
+[image5]: ./output_images/source_points.jpg "Source points"
+[image6]: ./output_images/object_points.jpg "Object points"
+[image7]: ./output_images/binary6.jpg "Binary example"
+[image8]: ./output_images/binary_warped6.jpg "Binary warped example"
+[image9]: ./output_images/poly6.jpg "Fit Visual"
+[image10]: ./output_images/final_output6.jpg "Output example"
+[video1]: ./output_videos/output_project_video.mp4 "Project video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
