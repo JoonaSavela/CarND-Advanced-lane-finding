@@ -22,7 +22,7 @@ The goals / steps of this project are the following:
 [image3]: ./test_images/test4.jpg "Image"
 [image4]: ./output_images/undist6.jpg "Undistorted image"
 [image5]: ./output_images/source_points.jpg "Source points"
-[image6]: ./output_images/object_points.jpg "Object points"
+[image6]: ./output_images/destination_points.jpg "Destination points"
 [image7]: ./output_images/binary6.jpg "Binary example"
 [image8]: ./output_images/binary_warped6.jpg "Binary warped example"
 [image9]: ./output_images/poly6.jpg "Fit Visual"
@@ -45,30 +45,34 @@ You're reading it!
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the first code cell of the IPython notebook located in "./find\_lanes.ipynb".  
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `object_points` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `image_points` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
+I then used the output `object_points` and `image_points` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
 ![alt text][image1]
+![alt text][image2]
+
 
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+Distortion correction could be applied to the road images the same way it was tested previously on one of the calibration images: using the `cv2.undistort()` function. Here is the outcome of undistortion on one of the road test images:
+
+![alt text][image3]
+![alt text][image4]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines 67 through 115 in the 5th cell of `find_lanes.ipynb`).  Here's an example of my output for this step. 
 
-![alt text][image3]
+![alt text][image7]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output\_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.float32(
@@ -77,10 +81,10 @@ src = np.float32(
     [100,img_shape[1]], # bottom left
     [568,img_shape[1]/2+100]]) # top left
 dst = np.float32(
-    [[img_shape[0]/2+300,0], # top right
-    [img_shape[0]/2+300,img_shape[1]], # bottom right
-    [img_shape[0]/2-300,img_shape[1]], # bottom left
-    [img_shape[0]/2-300,0]]) # top left
+    [[img_shape[0]/2+400,0], # top right
+    [img_shape[0]/2+400,img_shape[1]], # bottom right
+    [img_shape[0]/2-400,img_shape[1]], # bottom left
+    [img_shape[0]/2-400,0]]) # top left
 ```
 
 This resulted in the following source and destination points:
@@ -94,7 +98,8 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+![alt text][image5]
+![alt text][image6]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
