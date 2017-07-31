@@ -110,12 +110,16 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image6]
 *Destination points*
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial.
-
-After these two steps I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+After this step, perspective transform could be applied to the binary images:
 
 ![alt text][image8]
 *Warped binary image*
+
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial.
+
+After these two steps I identified the lane pixels by using the sliding window search with 9 windows and a histogram of the wapred binary image, but with a few changes when compared to the exapmle provided in the lessons. First, if the nonzero points in a window are highly deviated, only the more centered ones are taken into consideration. Then, if there are enough found pixels, the next window is centered to the most frequent value of the pixels, not the mean value. Finally, if the image is a part of a video stream, lane pixels are detected in previous frames, and the intercept value of the model doesn't deviate too much from the previous one, the next lane pixels are simply gotten around the previously fitted polynomial.
+
+After the left and right lane pixels are detected, I fit a 2nd order polynomial to both of them, like so:
 
 ![alt text][image9]
 *Fitted polynomials*
@@ -126,7 +130,7 @@ I used a helper function `curverad()` (lines 234-235 in the fifth cell if `find_
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+When I had the fitted lines, I created a blank images where I filled the lane area with green, drew the left lane with red, and the right with blue, combined and unwarped these, and merged them with the original (undistorted) image. Finally, I added text about the radius of curvature and the offset of the vehicle to the top of the image. Here is an example of the final output:
 
 ![alt text][image10]
 *Output image*
@@ -135,7 +139,9 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### 1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+
+I created a `Line()` class in order to make the lane finding algorithm more robust and smooth for a video stream (lines 256-311 in the fifth cell of `find_lanes.ipynb`). This class keeps track of important information about the lanes, such as the 10 most recent fits, used for calculating the running average of the fits.
 
 Here's a [link to my video result](./output_videos/output_project_video.mp4).
 
@@ -145,4 +151,8 @@ Here's a [link to my video result](./output_videos/output_project_video.mp4).
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+My pipeline performs poorly when the edge of sidewall's shadow is close to either side of the lane, in extreme brightness, and when the road is not flat enough, as seen from the output videos `output_challenge_video.mp4` and `output_harder_challenge_video.mp4` located in the folder "./output\_videos/". Also, if the first fit in the video stream is not very good, then the pipeline has trouble correcting its mistake.
+
+When it comes to the shadow and the extreme brightness problems, fine tuning and clever combining of the parameters in the color and gradient thresholding phase would most likely vastly improve the pipelines performance. This would also decrease the likelyhood of a bad fit in the beginning of a video stream. AS for the (un)flatness problem, this would most likely require changing the perspective transform phase, so that the source and destination points and therefore the transform matrices are calculated individually for each of the images. This would require some very clever selection of the source and destination points, which is probably very difficult.
+
+Other changes to improve the performance of the pipeline include checking for robustness of the fits before the pixel detection phase, more clever lane pixel detection, and experiments with general parameter tuning and combining in the thresholding phase.
