@@ -21,8 +21,8 @@ The goals / steps of this project are the following:
 [image2]: ./output_images/test_undist_img.jpg "Undistorted calibration image"
 [image3]: ./test_images/test4.jpg "Image"
 [image4]: ./output_images/undist6.jpg "Undistorted image"
-[image5]: ./output_images/source_points.jpg "Source points"
-[image6]: ./output_images/destination_points.jpg "Destination points"
+[image5]: ./output_images/source_points.png "Source points"
+[image6]: ./output_images/destination_points.png "Destination points"
 [image7]: ./output_images/binary6.jpg "Binary example"
 [image8]: ./output_images/binary_warped6.jpg "Binary warped example"
 [image9]: ./output_images/poly6.jpg "Fit Visual"
@@ -52,8 +52,10 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 I then used the output `object_points` and `image_points` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
 ![alt text][image1]
-![alt text][image2]
+*Calibration image*
 
+![alt text][image2]
+*Undistorted calibration image*
 
 ### Pipeline (single images)
 
@@ -62,17 +64,21 @@ I then used the output `object_points` and `image_points` to compute the camera 
 Distortion correction could be applied to the road images the same way it was tested previously on one of the calibration images: using the `cv2.undistort()` function. Here is the outcome of undistortion on one of the road test images:
 
 ![alt text][image3]
+*Test image*
+
 ![alt text][image4]
+*Undistorted test image*
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines 67 through 115 in the 5th cell of `find_lanes.ipynb`).  Here's an example of my output for this step. 
 
 ![alt text][image7]
+*Thresholded image*
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output\_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `warp()`, which appears in lines 117 through 118 in the fifth cell of `find_lanes.ipynb`.  The `warp()` function takes as inputs an image (`img`), as well as the inversion matrix (`M`), which is calculated in the third cell of the file. The inversion matrix (`Minv`), which is used for inverting the perspective transform with the `unwarp()` function, is also calculated in that cell. I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.float32(
@@ -99,23 +105,31 @@ This resulted in the following source and destination points:
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
 ![alt text][image5]
+*Source points*
+
 ![alt text][image6]
+*Destination points*
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial.
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+After these two steps I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
+![alt text][image8]
+*Warped binary image*
+
+![alt text][image9]
+*Fitted polynomials*
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I used a helper function `curverad()` (lines 234-235 in the fifth cell if `find_lanes.ipynb`) to calculate the curvature of both of the lanes (lines 349-351 for a single image, lines 404-406 for a stream of images, both in the fifth cell of the file). I then used a weighted average to calculate the actual curvature of the road (lines 353-356 for a single image, lines 408-414 for a stream of images, again in the fifth cell of the file). The offset calculation for both single images and a stream of images was done in lines 416-432 of the fifth cell.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![alt text][image10]
+*Output image*
 
 ---
 
